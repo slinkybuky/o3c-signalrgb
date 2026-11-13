@@ -22,6 +22,10 @@ export function ProductId() {
     return 0x0009;
 }
 
+export function ImageUrl() {
+    return "https://raw.githubusercontent.com/slinkybuky/o3c-signalrgb/main/SayoO3C.png";
+}
+
 export function Type() {
     return "hid";
 }
