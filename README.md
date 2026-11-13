@@ -1,0 +1,1 @@
+[![Click here to add this repo to SignalRGB](https://raw.githubusercontent.com/SRGBmods/QMK-Images/main/images/add-to-signalrgb.png)](https://go.signalrgb.com/app/addon/install?url=https://https://github.com/slinkybuky/o3c-signalrgb)
