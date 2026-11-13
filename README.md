@@ -2,7 +2,7 @@
 
 [See the post on the SignalRGB Discord server](https://discord.com/channels/803347488190365737/1570656650631839744)
 
-I made a plugin that allows SayoDevices that are modded with O3Cpatch to be controlled via SignalRGB! Works with base O3C, but I don't know if anything is different with the O3C++. Tested on CachyOS (I don't believe any udev rules are required) but untested on Windows and other Linux operating systems. It would be great if anyone with a patched SayoDevice to give it a try!
+I made a plugin that allows SayoDevices that are modded with O3Cpatch to be controlled via SignalRGB! Works with base O3C, but I don't know if anything is different with the O3C++. Tested on CachyOS (I don't believe any udev rules are required) but untested on Windows and other Linux operating systems (it should work fine). It would be great if anyone with a patched SayoDevice would give it a try!
 
 https://github.com/slinkybuky/o3c-signalrgb
 
