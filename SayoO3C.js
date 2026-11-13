@@ -39,7 +39,7 @@ export function Size() {
 }
 
 export function LedNames() {
-    return ["Left Key", "Middle Key"];
+    return ["Key 1", "Key 2"];
 }
 
 export function LedPositions() {
@@ -50,22 +50,22 @@ export function Validate(endpoint) {
     return endpoint.interface === 1;
 }
 
-function buildPacket(left, middle) {
+function buildPacket(key1, key2) {
     const packet = new Array(REPORT_LENGTH).fill(0);
 
     packet[0] = REPORT_ID;
     packet[1] = COMMAND;
     packet[2] = 0x06;
 
-    packet[4] = left[0];
-    packet[5] = left[1];
-    packet[6] = left[2];
+    packet[4] = key1[0];
+    packet[5] = key1[1];
+    packet[6] = key1[2];
 
-    packet[7] = middle[0];
-    packet[8] = middle[1];
+    packet[7] = key2[0];
+    packet[8] = key2[1];
 
     packet[3] = (
-        middle[2] -
+        key2[2] -
         packet[0] -
         packet[1] -
         packet[2] -
@@ -98,10 +98,10 @@ export function Initialize() {
 }
 
 export function Render() {
-    const left = device.color(0, 0);
-    const middle = device.color(1, 0);
+    const key1 = device.color(0, 0);
+    const key2 = device.color(1, 0);
 
-    const packet = buildPacket(left, middle);
+    const packet = buildPacket(key1, key2);
 
     if (previousPacket !== null &&
         packet.every((value, index) => value === previousPacket[index])) {
