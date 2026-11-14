@@ -22,7 +22,7 @@ export function ProductId() {
 }
 
 export function ImageUrl() {
-    return "https://raw.githubusercontent.com/slinkybuky/o3c-signalrgb/main/SayoO3C.png";
+    return "https://raw.githubusercontent.com/slinkybuky/o3c-signalrgb/main/icons/SayoDevice_O3C.png";
 }
 
 export function DeviceType() {
