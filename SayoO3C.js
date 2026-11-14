@@ -1,5 +1,4 @@
-
-const LED_POSITIONS = [[0, 0], [1, 0]];
+const LED_POSITIONS = [[0, 0], [1, 0], [2, 0]];
 const REPORT_LENGTH = 64;
 const REPORT_ID = 0x02;
 const COMMAND = 0x69;
@@ -35,11 +34,11 @@ export function Type() {
 }
 
 export function Size() {
-    return [2, 1];
+    return [3, 1];
 }
 
 export function LedNames() {
-    return ["Key 1", "Key 2"];
+    return ["Key 1", "Key 2", "Key 3"];
 }
 
 export function LedPositions() {
@@ -50,12 +49,13 @@ export function Validate(endpoint) {
     return endpoint.interface === 1;
 }
 
-function buildPacket(key1, key2) {
+function buildPacket(key1, key2, key3) {
     const packet = new Array(REPORT_LENGTH).fill(0);
 
     packet[0] = REPORT_ID;
     packet[1] = COMMAND;
-    packet[2] = 0x06;
+    packet[2] = 0x0A;
+    packet[3] = 0x00;
 
     packet[4] = key1[0];
     packet[5] = key1[1];
@@ -63,20 +63,17 @@ function buildPacket(key1, key2) {
 
     packet[7] = key2[0];
     packet[8] = key2[1];
+    packet[9] = key2[2];
 
-    packet[3] = (
-        key2[2] -
-        packet[0] -
-        packet[1] -
-        packet[2] -
-        packet[4] -
-        packet[5] -
-        packet[6] -
-        packet[7] -
-        packet[8]
-    ) & 0xFF;
+    packet[10] = key3[0];
+    packet[11] = key3[1];
+    packet[12] = key3[2];
 
-    packet[9] = packet.slice(0, 9).reduce((sum, value) => sum + value, 0) & 0xFF;
+    packet[13] = packet
+        .slice(0, 13)
+        .reduce((sum, value) => sum + value, 0) & 0xFF;
+
+    packet[0x20] = COMMAND;
 
     return packet;
 }
@@ -100,15 +97,16 @@ export function Initialize() {
 export function Render() {
     const key1 = device.color(0, 0);
     const key2 = device.color(1, 0);
+    const key3 = device.color(2, 0);
 
-    const packet = buildPacket(key1, key2);
+    const packet = buildPacket(key1, key2, key3);
 
     if (previousPacket !== null &&
         packet.every((value, index) => value === previousPacket[index])) {
         return;
-        }
+    }
 
-        drainInput();
+    drainInput();
     device.write(packet, REPORT_LENGTH);
 
     previousPacket = packet;
