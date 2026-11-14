@@ -1,7 +1,9 @@
+
 const LED_POSITIONS = [[0, 0], [1, 0], [2, 0]];
 const REPORT_LENGTH = 64;
-const REPORT_ID = 0x02;
-const COMMAND = 0x69;
+const REPORT_ID = 0x21;
+const ECHO = 0x03;
+const COMMAND = 0x27;
 
 let previousPacket = null;
 
@@ -46,69 +48,68 @@ export function LedPositions() {
 }
 
 export function Validate(endpoint) {
-    return endpoint.interface === 1;
+    return endpoint.usage_page === 0xFF11 &&
+           endpoint.usage === 0x0002;
 }
 
-function buildPacket(key1, key2, key3) {
+function buildPacket(colors) {
     const packet = new Array(REPORT_LENGTH).fill(0);
 
     packet[0] = REPORT_ID;
-    packet[1] = COMMAND;
-    packet[2] = 0x0A;
-    packet[3] = 0x00;
+    packet[1] = ECHO;
 
-    packet[4] = key1[0];
-    packet[5] = key1[1];
-    packet[6] = key1[2];
+    packet[4] = 0x10;
+    packet[5] = 0x00;
+    packet[6] = COMMAND;
+    packet[7] = 0x00;
 
-    packet[7] = key2[0];
-    packet[8] = key2[1];
-    packet[9] = key2[2];
+    for (let i = 0; i < 3; i++) {
+        const offset = 8 + i * 4;
+        const color = colors[i];
 
-    packet[10] = key3[0];
-    packet[11] = key3[1];
-    packet[12] = key3[2];
+        packet[offset] = color[0] & 0xFF;
+        packet[offset + 1] = color[1] & 0xFF;
+        packet[offset + 2] = color[2] & 0xFF;
+        packet[offset + 3] = 0xFF;
+    }
 
-    packet[13] = packet
-        .slice(0, 13)
-        .reduce((sum, value) => sum + value, 0) & 0xFF;
+    packet[2] = 0;
+    packet[3] = 0;
 
-    packet[0x20] = COMMAND;
+    let sum = 0;
+
+    for (let i = 0; i < REPORT_LENGTH; i += 2) {
+        sum += packet[i] | ((packet[i + 1] ?? 0) << 8);
+    }
+
+    sum &= 0xFFFF;
+
+    packet[2] = sum & 0xFF;
+    packet[3] = (sum >> 8) & 0xFF;
 
     return packet;
 }
 
-function drainInput() {
-    for (let i = 0; i < 8; i++) {
-        device.read([], REPORT_LENGTH, 0);
-
-        if (device.getLastReadSize() <= 0) {
-            break;
-        }
-    }
-}
-
 export function Initialize() {
     previousPacket = null;
-    drainInput();
-    device.log("O3Cpatch RGB controller initialized");
+    device.log("SayoDevice O3C initialized");
 }
 
 export function Render() {
-    const key1 = device.color(0, 0);
-    const key2 = device.color(1, 0);
-    const key3 = device.color(2, 0);
+    const colors = [
+        device.color(0, 0),
+        device.color(1, 0),
+        device.color(2, 0)
+    ];
 
-    const packet = buildPacket(key1, key2, key3);
+    const packet = buildPacket(colors);
 
     if (previousPacket !== null &&
         packet.every((value, index) => value === previousPacket[index])) {
         return;
     }
 
-    drainInput();
     device.write(packet, REPORT_LENGTH);
-
     previousPacket = packet;
 }
 
