@@ -6,6 +6,6 @@ I made a plugin that allows SayoDevices that are modded with O3Cpatch to be cont
 
 https://github.com/slinkybuky/o3c-signalrgb
 
-Known limitations: Only the left 2 of 3 lights work at the moment. ~~This is an O3Cpatch issue, not a plugin issue. I might make a PR to O3Cpatch sometime soon, but don't be caught off-guard if the right one doesn't work~~ I will release a fix soon and release a version for the SayoDevice O3C++.
+Known limitations: ~~Only the left 2 of 3 lights work at the moment. ~~This is an O3Cpatch issue, not a plugin issue. I might make a PR to O3Cpatch sometime soon, but don't be caught off-guard if the right one doesn't work~~ I will release a fix soon and release a version for the SayoDevice O3C++.~~ Requires O3Cpatch. Hopefully I can make it support unmodded SayoDevices soon.
 
 Disclaimer: If you are going to patch your O3C, make sure you use the correct O3Cpatch version for your firmware. The latest patch version can be found at https://o3cpatch.pages.dev/ and applied using developer mode at https://sayodevice.com.
